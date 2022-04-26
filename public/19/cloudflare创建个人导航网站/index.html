@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CF-Worker-Dir是一款适用于Cloudflare Worker平台上的云函数程序，可以使用它在一分钟内搭建属于自己的导航页面。CF-Worker-Dir提供丰富的自定义配置，同时它还可以预留了接口帮助你售出自己域名。接下来，我们会用cloudflare worker来免费创建这个小玩意。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cloudflare创建个人导航网站">
+<meta property="og:url" content="http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/index.html">
+<meta property="og:site_name" content="十贰的博客-分站">
+<meta property="og:description" content="CF-Worker-Dir是一款适用于Cloudflare Worker平台上的云函数程序，可以使用它在一分钟内搭建属于自己的导航页面。CF-Worker-Dir提供丰富的自定义配置，同时它还可以预留了接口帮助你售出自己域名。接下来，我们会用cloudflare worker来免费创建这个小玩意。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-19T01:33:22.000Z">
+<meta property="article:modified_time" content="2022-04-24T08:15:54.184Z">
+<meta property="article:author" content="十贰">
+<meta property="article:tag" content="cloudflare">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>cloudflare创建个人导航网站</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">所有文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://hehysh.github.io">主站</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/24/hello-world/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/17/worker%E7%9A%84%E8%BF%90%E7%94%A8/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&text=cloudflare创建个人导航网站"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&is_video=false&description=cloudflare创建个人导航网站"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=cloudflare创建个人导航网站&body=Check out this article: http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&name=cloudflare创建个人导航网站&description=&lt;blockquote&gt;
+&lt;p&gt;CF-Worker-Dir是一款适用于Cloudflare Worker平台上的云函数程序，可以使用它在一分钟内搭建属于自己的导航页面。CF-Worker-Dir提供丰富的自定义配置，同时它还可以预留了接口帮助你售出自己域名。&lt;br&gt;接下来，我们会用cloudflare worker来&lt;strong&gt;免费&lt;/strong&gt;创建这个小玩意。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&t=cloudflare创建个人导航网站"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">系统安装</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        cloudflare创建个人导航网站
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">十贰</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-19T01:33:22.000Z" itemprop="datePublished">2022-04-19</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/cloudflare/" rel="tag">cloudflare</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>CF-Worker-Dir是一款适用于Cloudflare Worker平台上的云函数程序，可以使用它在一分钟内搭建属于自己的导航页面。CF-Worker-Dir提供丰富的自定义配置，同时它还可以预留了接口帮助你售出自己域名。<br>接下来，我们会用cloudflare worker来<strong>免费</strong>创建这个小玩意。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="系统安装"><a href="#系统安装" class="headerlink" title="系统安装"></a>系统安装</h1><p>在 Cloudflare Worker 管理页面创建一个新的 Worker 。<br>在Worker编辑页面左边粘贴<strong>以下</strong>的代码。<br>根据自身需要修改 config 的配置内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *  自定义网站配置 </span><br><span class="line"> */</span><br><span class="line">const config = &#123;</span><br><span class="line">  title: &quot;自定义导航&quot;,                 //write your website title</span><br><span class="line">  subtitle: &quot;Cloudflare Workers Dir&quot;, //write your website subtitle</span><br><span class="line">  logo_icon: &quot;sitemap&quot;,               //select your logo by semantic-ui icon (you can get more msg in:https://semantic-ui.com/elements/icon.html)</span><br><span class="line">  hitokoto: true,                     //use hitokoto or not</span><br><span class="line">  search:true,                        //enable search function</span><br><span class="line">  search_engine:[                     //choose search engine which you use</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;百 度&quot;,</span><br><span class="line">      template:&quot;https://www.baidu.com/s?wd=$s&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;谷 歌&quot;,</span><br><span class="line">      template:&quot;https://www.google.com/search?q=$s&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;必 应&quot;,</span><br><span class="line">      template:&quot;https://www.bing.com/search?q=$s&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;搜 狗&quot;,</span><br><span class="line">      template:&quot;https://www.sogou.com/web?query=$s&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  selling_ads: true,                  //Selling your domain or not.(turning on may be helpful for selling this domain by showing some ads.)</span><br><span class="line">  sell_info:&#123;</span><br><span class="line">    domain:&quot;example.com&quot;,</span><br><span class="line">    price:500,                        //domain price</span><br><span class="line">    mon_unit:&quot;yen sign&quot;,              //monetary unit </span><br><span class="line">    contact:[                         //how to contact you</span><br><span class="line">      &#123;</span><br><span class="line">        type:&quot;envelope&quot;,               //contact type (&quot;weixin&quot;,&quot;qq&quot;,&quot;telegram plane&quot;,&quot;envelope&quot; or &quot;phone&quot;)</span><br><span class="line">        content:&quot;info@example.com&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]                        </span><br><span class="line">  &#125;,</span><br><span class="line">  lists: [                            //Url list</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;技术&quot;,</span><br><span class="line">      icon:&quot;code&quot;,</span><br><span class="line">      list:[</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://oschina.net/&quot;,</span><br><span class="line">          name:&quot;开源中国&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://v2ex.com&quot;,</span><br><span class="line">          name:&quot;V2EX&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://csdn.net/&quot;,</span><br><span class="line">          name:&quot;CSDN技术社区&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://github.com/&quot;,</span><br><span class="line">          name:&quot;Github&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      name:&quot;学习&quot;,</span><br><span class="line">      icon:&quot;graduation cap&quot;,</span><br><span class="line">      list:[</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://w3school.com.cn/&quot;,</span><br><span class="line">          name:&quot;W3school在线教程&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://runoob.com/&quot;,</span><br><span class="line">          name:&quot;菜鸟教程&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://segmentfault.com/&quot;,</span><br><span class="line">          name:&quot;思否社区&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          url:&quot;https://jianshu.com/&quot;,</span><br><span class="line">          name:&quot;简书&quot;,</span><br><span class="line">          desc:&quot;程序员集散地&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">const el = (tag, attrs, content) =&gt; `&lt;$&#123;tag&#125; $&#123;attrs.join(&quot; &quot;)&#125;&gt;$&#123;content&#125;&lt;/$&#123;tag&#125;&gt;`;</span><br><span class="line"></span><br><span class="line">async function handleRequest(request) &#123;</span><br><span class="line">  const init = &#123;</span><br><span class="line">    headers: &#123;</span><br><span class="line">      &#x27;content-type&#x27;: &#x27;text/html;charset=UTF-8&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">  return new Response(renderHTML(renderIndex(),config.selling_ads? renderSeller() :null), init);</span><br><span class="line">&#125;</span><br><span class="line">addEventListener(&#x27;fetch&#x27;, event =&gt; &#123;</span><br><span class="line">  return event.respondWith(handleRequest(event.request))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">/*通过分析链接 实时获取favicon</span><br><span class="line">* @url 需要分析的Url地址</span><br><span class="line">*/</span><br><span class="line">function getFavicon(url)&#123;</span><br><span class="line">  if(url.match(/https&#123;0,1&#125;:\/\//))&#123;</span><br><span class="line">    //return &quot;https://ui-avatars.com/api/?bold=true&amp;size=36&amp;background=0D8ABC&amp;color=fff&amp;rounded=true&amp;name=&quot; + url.split(&#x27;//&#x27;)[1];</span><br><span class="line">    return &quot;https://www.google.cn/s2/favicons?sz=64&amp;domain_url=&quot; + url;</span><br><span class="line">  &#125;else&#123;</span><br><span class="line">    //return &quot;https://ui-avatars.com/api/?bold=true&amp;size=36&amp;background=0D8ABC&amp;color=fff&amp;rounded=true&amp;name=&quot; + url;</span><br><span class="line">    return &quot;https://www.google.cn/s2/favicons?sz=64&amp;domain_url=http://&quot; + url;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/** Render Functions</span><br><span class="line"> *  渲染模块函数</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">function renderIndex()&#123;</span><br><span class="line">  const footer = el(&#x27;footer&#x27;,[],el(&#x27;div&#x27;,[&#x27;class=&quot;footer&quot;&#x27;],&#x27;Powered by&#x27; + el(&#x27;a&#x27;,[&#x27;class=&quot;ui label&quot;&#x27;,&#x27;href=&quot;https://github.com/sleepwood/cf-worker-dir&quot;&#x27;,&#x27;target=&quot;_blank&quot;&#x27;],el(&#x27;i&#x27;,[&#x27;class=&quot;github icon&quot;&#x27;],&quot;&quot;) + &#x27;Cf-Worker-Dir&#x27;) + &#x27; &amp;copy; Base on &#x27; + el(&#x27;a&#x27;,[&#x27;class=&quot;ui label&quot;&#x27;],el(&#x27;i&#x27;,[&#x27;class=&quot;balance scale icon&quot;&#x27;],&quot;&quot;) + &#x27;MIT License&#x27;)));</span><br><span class="line">  return renderHeader() + renderMain() + footer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function renderHeader()&#123;</span><br><span class="line">  const item = (template,name) =&gt; el(&#x27;a&#x27;,[&#x27;class=&quot;item&quot;&#x27;,`data-url=&quot;$&#123;template&#125;&quot;`],name);</span><br><span class="line"></span><br><span class="line">  var nav = el(&#x27;div&#x27;,[&#x27;class=&quot;ui large secondary inverted menu&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;item&quot;&#x27;],el(&#x27;p&#x27;,[&#x27;id=&quot;hitokoto&quot;&#x27;],&#x27;条条大路通罗马&#x27;)))</span><br><span class="line">  var title = el(&#x27;h1&#x27;,[&#x27;class=&quot;ui inverted header&quot;&#x27;],el(&#x27;i&#x27;,[`class=&quot;$&#123;config.logo_icon&#125; icon&quot;`],&quot;&quot;) + el(&#x27;div&#x27;,[&#x27;class=&quot;content&quot;&#x27;],config.title + el(&#x27;div&#x27;,[&#x27;class=&quot;sub header&quot;&#x27;],config.subtitle)));</span><br><span class="line">  var menu = el(&#x27;div&#x27;,[&#x27;id=&quot;sengine&quot;&#x27;,&#x27;class=&quot;ui bottom attached tabular inverted secondary menu&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;header item&quot;&#x27;],&#x27;&amp;nbsp;&#x27;) + config.search_engine.map((link,key) =&gt;&#123;</span><br><span class="line">    if(key == 0)&#123;</span><br><span class="line">      return el(&#x27;a&#x27;,[&#x27;class=&quot;active item&quot;&#x27;,`data-url=&quot;$&#123;link.template&#125;&quot;`],link.name);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      return item(link.template,link.name);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).join(&quot;&quot;))</span><br><span class="line">  var input = el(&#x27;div&#x27;,[&#x27;class=&quot;ui left corner labeled right icon fluid large input&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui left corner label&quot;&#x27;],el(&#x27;img&#x27;,[&#x27;id=&quot;search-fav&quot;&#x27;,&#x27;class=&quot;left floated avatar ui image&quot;&#x27;,&#x27;src=&quot;https://www.baidu.com/favicon.ico&quot;&#x27;],&quot;&quot;)) + el(&#x27;input&#x27;,[&#x27;id=&quot;searchinput&quot;&#x27;,&#x27;type=&quot;search&quot;&#x27;,&#x27;placeholder=&quot;搜索你想要知道的……&quot;&#x27;,&#x27;autocomplete=&quot;off&quot;&#x27;],&quot;&quot;) + el(&#x27;i&#x27;,[&#x27;class=&quot;inverted circular search link icon&quot;&#x27;],&quot;&quot;));</span><br><span class="line">  return el(&#x27;header&#x27;,[],el(&#x27;div&#x27;,[&#x27;id=&quot;head&quot;&#x27;,&#x27;class=&quot;ui inverted vertical masthead center aligned segment&quot;&#x27;],(config.hitokoto ? el(&#x27;div&#x27;,[&#x27;id=&quot;nav&quot;&#x27;,&#x27;class=&quot;ui container&quot;&#x27;],nav) : &quot;&quot;) + el(&#x27;div&#x27;,[&#x27;id=&quot;title&quot;&#x27;,&#x27;class=&quot;ui text container&quot;&#x27;],title + (config.search ? input + menu :&quot;&quot;) + `$&#123;config.selling_ads ? &#x27;&lt;div&gt;&lt;a id=&quot;menubtn&quot; class=&quot;red ui icon inverted button&quot;&gt;&lt;i class=&quot;heart icon&quot;&gt;&lt;/i&gt; 喜欢此域名 &lt;/a&gt;&lt;/div&gt;&#x27; : &#x27;&#x27;&#125;`)))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function renderMain() &#123;</span><br><span class="line">  var main = config.lists.map((item) =&gt; &#123;</span><br><span class="line">    const card = (url,name,desc)=&gt; el(&#x27;a&#x27;,[&#x27;class=&quot;card&quot;&#x27;,`href=$&#123;url&#125;`,&#x27;target=&quot;_blank&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;content&quot;&#x27;],el(&#x27;img&#x27;,[&#x27;class=&quot;left floated avatar ui image&quot;&#x27;,`src=$&#123;getFavicon(url)&#125;`],&quot;&quot;) + el(&#x27;div&#x27;,[&#x27;class=&quot;header&quot;&#x27;],name) + el(&#x27;div&#x27;,[&#x27;class=&quot;meta&quot;&#x27;],desc)));</span><br><span class="line">    const divider = el(&#x27;h4&#x27;,[&#x27;class=&quot;ui horizontal divider header&quot;&#x27;],el(&#x27;i&#x27;,[`class=&quot;$&#123;item.icon&#125; icon&quot;`],&quot;&quot;)+item.name);</span><br><span class="line"></span><br><span class="line">    var content = el(&#x27;div&#x27;,[&#x27;class=&quot;ui four stackable cards&quot;&#x27;],item.list.map((link) =&gt;&#123;</span><br><span class="line">      return card(link.url,link.name,link.desc);</span><br><span class="line">    &#125;).join(&quot;&quot;));</span><br><span class="line"></span><br><span class="line">    return el(&#x27;div&#x27;,[&#x27;class=&quot;ui basic segment&quot;&#x27;],divider + content);</span><br><span class="line">  &#125;).join(&quot;&quot;);</span><br><span class="line">  </span><br><span class="line">  return el(&#x27;main&#x27;,[],el(&#x27;div&#x27;,[&#x27;class=&quot;ui container&quot;&#x27;],main));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function renderSeller() &#123;</span><br><span class="line">  const item = (type,content) =&gt; el(&#x27;div&#x27;,[&#x27;class=&quot;item&quot;&#x27;],el(&#x27;i&#x27;,[`class=&quot;$&#123;type&#125; icon&quot;`],&quot;&quot;) + el(&#x27;div&#x27;,[&#x27;class=&quot;content&quot;&#x27;],content));</span><br><span class="line">  var title = el(&#x27;h1&#x27;,[&#x27;class=&quot;ui yellow dividing header&quot;&#x27;],el(&#x27;i&#x27;,[&#x27;class=&quot;gem outline icon&quot;&#x27;],&quot;&quot;) + el(&#x27;div&#x27;,[&#x27;class=&quot;content&quot;&#x27;],config.sell_info.domain + &#x27; 正在出售&#x27;));</span><br><span class="line">  var action = el(&#x27;div&#x27;,[&#x27;class=&quot;actions&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui basic cancel inverted button&quot;&#x27;],el(&#x27;i&#x27;,[&#x27;class=&quot;reply icon&quot;&#x27;],&quot;&quot;) + &#x27;返回&#x27;));</span><br><span class="line"></span><br><span class="line">  var contact = config.sell_info.contact.map((list) =&gt; &#123;</span><br><span class="line">    return item(list.type,list.content);</span><br><span class="line">  &#125;).join(&quot;&quot;);</span><br><span class="line">  var column = el(&#x27;div&#x27;,[&#x27;class=&quot;column&quot;&#x27;],el(&#x27;h3&#x27;,[&#x27;class=&quot;ui center aligned icon inverted header&quot;&#x27;],el(&#x27;i&#x27;,[&#x27;class=&quot;circular envelope open outline grey inverted icon&quot;&#x27;],&quot;&quot;) + &#x27;联系我&#x27;) + el(&#x27;div&#x27;,[&#x27;class=&quot;ui relaxed celled large list&quot;&#x27;],contact));</span><br><span class="line">  var price = el(&#x27;div&#x27;,[&#x27;class=&quot;column&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui large yellow statistic&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;value&quot;&#x27;],el(&#x27;i&#x27;,[`class=&quot;$&#123;config.sell_info.mon_unit&#125; icon&quot;`],&quot;&quot;) + config.sell_info.price)));</span><br><span class="line">  var content = el(&#x27;div&#x27;,[&#x27;class=&quot;content&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui basic segment&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui two column stackable center aligned grid&quot;&#x27;],el(&#x27;div&#x27;,[&#x27;class=&quot;ui inverted vertical divider&quot;&#x27;],&#x27;感兴趣？&#x27;) + el(&#x27;div&#x27;,[&#x27;class=&quot;middle aligned row&quot;&#x27;],price + column))));</span><br><span class="line"></span><br><span class="line">  return el(&#x27;div&#x27;,[&#x27;id=&quot;seller&quot;&#x27;,&#x27;class=&quot;ui basic modal&quot;&#x27;],title + content + action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function renderHTML(index,seller) &#123;</span><br><span class="line">  return `&lt;!DOCTYPE html&gt;</span><br><span class="line">  &lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">      &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">      &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span><br><span class="line">      &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;</span><br><span class="line">      &lt;title&gt;$&#123;config.title&#125; - $&#123;config.subtitle&#125;&lt;/title&gt;</span><br><span class="line">      &lt;link href=&quot;https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">      &lt;link href=&quot;https://cdn.jsdelivr.net/gh/sleepwood/cf-worker-dir@0.1.1/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">      &lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">      &lt;script src=&quot;https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    $&#123;index&#125;</span><br><span class="line">    $&#123;config.selling_ads ? seller : &#x27;&#x27;&#125;</span><br><span class="line">    &lt;script src=&quot;https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto&quot; defer&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">      $(&#x27;#sengine a&#x27;).on(&#x27;click&#x27;, function (e) &#123;</span><br><span class="line">        $(&#x27;#sengine a.active&#x27;).toggleClass(&#x27;active&#x27;);</span><br><span class="line">        $(e.target).toggleClass(&#x27;active&#x27;);</span><br><span class="line">        $(&#x27;#search-fav&#x27;).attr(&#x27;src&#x27;,$(e.target).data(&#x27;url&#x27;).match(`+/https&#123;0,1&#125;:\/\/\S+\//+`)[0] + &#x27;/favicon.ico&#x27;) ;</span><br><span class="line">      &#125;);</span><br><span class="line">      $(&#x27;.search&#x27;).on(&#x27;click&#x27;, function (e) &#123;</span><br><span class="line">          var url = $(&#x27;#sengine a.active&#x27;).data(&#x27;url&#x27;);</span><br><span class="line">          url = url.replace(`+/\$s/+`,$(&#x27;#searchinput&#x27;).val());</span><br><span class="line">          window.open(url);</span><br><span class="line">      &#125;);</span><br><span class="line">      /* 鼠标聚焦时，回车事件 */</span><br><span class="line">      $(&quot;#searchinput&quot;).bind(&quot;keypress&quot;, function()&#123;</span><br><span class="line">          if (event.keyCode == 13)&#123;</span><br><span class="line">          // 触发需要调用的方法</span><br><span class="line">          $(&quot;.search&quot;).click();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      $(&#x27;#menubtn&#x27;).on(&#x27;click&#x27;, function (e) &#123;</span><br><span class="line">          $(&#x27;#seller&#x27;).modal(&#x27;show&#x27;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">  &lt;/html&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制进去之后，就可以随意更改list，来达到个人导航站的效果了。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">所有文章</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://hehysh.github.io">主站</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">系统安装</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&text=cloudflare创建个人导航网站"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&is_video=false&description=cloudflare创建个人导航网站"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=cloudflare创建个人导航网站&body=Check out this article: http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&title=cloudflare创建个人导航网站"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&name=cloudflare创建个人导航网站&description=&lt;blockquote&gt;
+&lt;p&gt;CF-Worker-Dir是一款适用于Cloudflare Worker平台上的云函数程序，可以使用它在一分钟内搭建属于自己的导航页面。CF-Worker-Dir提供丰富的自定义配置，同时它还可以预留了接口帮助你售出自己域名。&lt;br&gt;接下来，我们会用cloudflare worker来&lt;strong&gt;免费&lt;/strong&gt;创建这个小玩意。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://hehysh1.github.io/19/cloudflare%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%BD%91%E7%AB%99/&t=cloudflare创建个人导航网站"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022
+    十贰
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/archives/">所有文章</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="http://hehysh.github.io">主站</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
